@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT Question Generator</title>
+</head>
+<body>
+<h1>ChatGPT Question Generator</h1>
+<textarea id="inputText" placeholder="Enter your text here"></textarea>
+<button onclick="generateQuestions()">Generate Questions</button>
+<ul id="questionsList"></ul>
+
+<script>
+    async function generateQuestions() {
+        const inputText = document.getElementById('inputText').value;
+
+        const response = await fetch('/generate-questions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ inputText })
+        });
+
+        const data = await response.json();
+        const questionsList = document.getElementById('questionsList');
+        questionsList.innerHTML = '';
+
+        if (data.questions) {
+            data.questions.forEach(question => {
+                const li = document.createElement('li');
+                li.textContent = question;
+                questionsList.appendChild(li);
+            });
+        } else {
+            questionsList.textContent = 'Error generating questions';
+        }
+    }
+</script>
+</body>
+</html>
